@@ -10,7 +10,18 @@
 - `wiki/`：经过整理的长期知识，按主题维护
 - `outputs/`：报告、摘要、提纲、草稿和问答产出
 - `assets/`：图片、PDF、音频和其他附件
+- `logs/`：按日期记录每天的入库、更新和待处理事项；第一次入库时再创建
 - `INDEX.md`：所有 wiki 主题的入口和一句话说明
+
+## 日期和元数据
+
+每份进入知识库的材料都要记录入库日期。至少区分以下日期：
+
+- `ingested_at`：材料进入本知识库的日期
+- `published_at`：原始材料发布的日期，如果已知
+- `updated_at`：对应 wiki 主题最近一次更新的日期
+
+日期应优先写在 Markdown 的 YAML 属性中，而不是只依赖文件名。入库日期使用 `YYYY-MM-DD` 格式。原始 PDF、图片或其他不可直接加入属性的文件，保留原文件，并创建一个同名或对应的 Markdown 记录保存来源和元数据。
 
 ## 用户的最简输入
 
@@ -48,6 +59,7 @@ https://example.com/article
 
 - 先把原始文件或原始文本保存到 `raw/` 的合适子目录
 - 文件名使用稳定、可读的格式：`YYYY-MM-DD-简短主题.ext`
+- 新建 Markdown 原料时，在正文前加入 `ingested_at`、`source_type`、`source_url`（如有）、`topics` 和 `status` 等元数据
 - 如果材料已经存在，不重复复制；先检查是否是同一来源或同一文件
 - 原文、原始链接、图片和附件尽量保留
 - 不为了“整齐”而改写原始材料
@@ -97,6 +109,13 @@ https://example.com/article
 - `INDEX.md` 是否已更新
 - 是否有无法确认的内容需要标记
 
+### 8. 更新每日入库记录
+
+- 入库流程完成后，创建或更新 `logs/YYYY-MM-DD.md`，日期使用本次入库日期
+- 日志只记录本次新增的 raw、更新或新建的 wiki、相关主题和待核实事项，不复制文章正文
+- 同一天的多次入库追加到同一个日志文件
+- 如果当天没有实际写入文件，不创建日志
+
 最后向用户简洁汇报：
 
 - 保存了哪些原始材料
@@ -104,6 +123,7 @@ https://example.com/article
 - 发现了哪些关键关联或冲突
 - 哪些内容仍然待核实
 - 是否建议下一步继续研究某个主题
+- 当天日志文件的路径
 
 ## 用户常用指令的默认含义
 
@@ -164,6 +184,23 @@ wiki 文章建议使用以下结构：
 
 记录不确定、存在争议或需要进一步查证的内容。
 ~~~
+
+原始 Markdown 材料建议使用以下元数据结构：
+
+~~~yaml
+---
+type: source
+ingested_at: YYYY-MM-DD
+published_at: YYYY-MM-DD
+source_type: article
+source_url: https://example.com/article
+topics:
+  - 主题名称
+status: processed
+---
+~~~
+
+没有对应信息时不要编造；未知字段可以省略或标记为 `unknown`。
 
 ## 修改边界
 
